@@ -57,15 +57,24 @@ class MeepExampleApp(object):
 
         s = []
         for m in messages:
-            s.append('id: %d<p>' % (m.id,))
-            s.append('title: %s<p>' % (m.title))
-            s.append('message: %s<p>' % (m.post))
-            s.append('author: %s<p>' % (m.author.username))
-            s.append("<a href='/m/delete_confirm?id=%d'>Delete Post</a>" % (m.id))
-            #s.append("<a href='/m/delete' action = 'delete_confirm method = 'POST' name = 'id' value = '%d'>Delete Message</a>" % m.id)
+            s.append('id: %d<br/>' % (m.id,))
+            s.append('title: %s<br/>' % (m.title))
+            s.append('message: %s<br/>' % (m.post))
+            s.append('author: %s<br/>' % (m.author.username))
+            s.append("""
+                     <a href='/m/add'>
+                     <input type = 'hidden' name ='pID' value = %d>
+                     Reply
+                     </a>
+                     <br/>""" % (m.id))
+            s.append("""
+                     <a href='/m/delete_confirm'>
+                     <form input = 'hidden' title = 'id' value = '%d'>
+                     Delete Post
+                     <form>
+                     </a>""" % (m.id))
             s.append('<hr>')
 
-        #s.append("<form action = 'delete_confirm' method = 'GET'>Delete Post # <input type = 'text' name = 'id'><br><input type = 'submit'></form>")
         s.append("<a href = '/m/add'>Add Message</a><p>")
         s.append("<a href='../../'>index</a>")
             
@@ -75,11 +84,28 @@ class MeepExampleApp(object):
         return ["".join(s)]
 
     def add_message(self, environ, start_response):
+        form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
+
+        pID = int(form['pID'].value)
+        print pID
         headers = [('Content-type', 'text/html')]
         
         start_response("200 OK", headers)
+        s = [];
+        s.append("""
+                <form action='add_action' method='POST'>
+                Title:
+                <input type='text' name='title'>
+                <br>
+                Message:
+                <input type='text' name='message'>
+                <br>
+                <input type='submit'>
+                <input type = 'hidden' name = 'pID' value = '%d'>
+                </form>
+                """ % pID)
 
-        return """<form action='add_action' method='POST'>Title: <input type='text' name='title'><br>Message:<input type='text' name='message'><br><input type='submit'></form>"""
+        return s
 
     def add_message_action(self, environ, start_response):
         print environ['wsgi.input']
@@ -87,6 +113,9 @@ class MeepExampleApp(object):
 
         title = form['title'].value
         message = form['message'].value
+        pID = int(form['pID'].value)
+
+        print pID;
         
         username = 'test'
         user = meeplib.get_user(username)
@@ -98,25 +127,17 @@ class MeepExampleApp(object):
         start_response("302 Found", headers)
         return ["message added"]
 
-    '''def del_message(self, environ, start_response):
-        start_response("200 OK", [('Content-type', 'text/html')])
-                           
-        return """Are you sure you want to delete this message?<p><p><a href = '/m/delete_confirm'>YUP</a><p><a href = '../'>NOPE</a>"""
-        '''
     def del_message_action(self, environ, start_response):
         print environ['wsgi.input']
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
+
+        print form
         
         messages = meeplib.get_all_messages()
 
         s = []
         found = False
         valid = True
-        for c in form['id'].value:
-            if c.isdigit() == False:
-                s.append("Input string not a number.")
-                valid = False
-                break
         if(valid):
             for m in messages:
                 if m.id == int(form['id'].value):
@@ -124,9 +145,20 @@ class MeepExampleApp(object):
                     s.append("Post Successfully Deleted.")
                     found = True
                     break
-            if found == False:
-                s.append("No Post with that ID was found.")
         
+        start_response("200 OK", [('Content-type', 'text/html')])
+        s.append("<p><p><a href = '../../'>Return to Index</a>")
+        return "".join(s)
+
+    def reply_to_post(self, environ, start_response):
+        print environ['wsgi.input']
+        form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
+
+        parentID = form['id'].value;
+
+        s = []
+
+
         start_response("200 OK", [('Content-type', 'text/html')])
         s.append("<p><p><a href = '../../'>Return to Index</a>")
         return "".join(s)
@@ -140,8 +172,8 @@ class MeepExampleApp(object):
                       '/m/list': self.list_messages,
                       '/m/add': self.add_message,
                       '/m/add_action': self.add_message_action,
-                      #'/m/delete': self.del_message,
                       '/m/delete_confirm': self.del_message_action
+                      #'/m/reply_to_post': self.reply_to_post
                       }
 
         # see if the URL is in 'call_dict'; if it is, call that function.
