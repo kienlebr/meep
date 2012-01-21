@@ -34,6 +34,7 @@ __all__ = ['Message', 'get_all_messages', 'get_message', 'delete_message',
 # a dictionary, storing all messages by a (unique, int) ID -> Message object.
 _messages = {}
 
+
 def _get_next_message_id():
     if _messages:
         return max(_messages.keys()) + 1
@@ -68,20 +69,25 @@ class Message(object):
     'author' must be an object of type 'User'.
     
     """
-    def __init__(self, title, post, author):
+    def __init__(self, title, post, author, pID):
         self.title = title
         self.post = post
+        self.replies = []
+        self.pID = pID
 
         assert isinstance(author, User)
         self.author = author
-
+        
         self._save_message()
 
     def _save_message(self):
         self.id = _get_next_message_id()
-        
+
         # register this new message with the messages list:
         _messages[self.id] = self
+
+        if(self.pID != '!'):
+            add_reply(self)
 
 def get_all_messages(sort_by='id'):
     return _messages.values()
@@ -91,7 +97,18 @@ def get_message(id):
 
 def delete_message(msg):
     assert isinstance(msg, Message)
+    if(msg.replies != []):
+        for r in msg.replies:
+            delete_message(_messages[r])
+    print "Deleting message: " + str(msg.id)
     del _messages[msg.id]
+
+
+def add_reply(msg):
+    message = get_message(int(msg.pID))
+    message.replies.append(int(msg.id))
+
+
 
 ###
 
