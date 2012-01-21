@@ -72,18 +72,13 @@ class MeepExampleApp(object):
 
     def list_messages(self, environ, start_response):
         messages = meeplib.get_all_messages()
-        #replies = meeplib.get_all_replies()
 
         s = []
         for m in messages:
             if(m.pID == "!"):
-                s = print_messages(m, s)
-            '''for r in replies:
-                if(r.id in m.replies):
-                    s = print_messages(r, s)'''
+                s = print_messages(m, s, 0)
+        s.append('<hr>')
             
-            s.append('<hr>')
-
         s.append("""
                  <form action = 'add' method = 'POST'>
                  <input type = 'hidden' name = 'pID' value = '!'>
@@ -203,7 +198,6 @@ class MeepExampleApp(object):
                       '/m/add': self.add_message,
                       '/m/add_action': self.add_message_action,
                       '/m/delete': self.del_message
-                      #'/m/reply_to_post': self.reply_to_post
                       }
 
         # see if the URL is in 'call_dict'; if it is, call that function.
@@ -224,24 +218,28 @@ class MeepExampleApp(object):
             start_response(status, [('Content-type', 'text/html')])
             return [x]
 
-def print_messages(m, s):
+def print_messages(m, s, level):
+    if(level != 0):
+        s.append('<blockquote>')
+        s.append('<hr>')
     s.append('id: %d<br/>' % (m.id,))
     s.append('title: %s<br/>' % (m.title))
     s.append('message: %s<br/>' % (m.post))
-    s.append('author: %s<br/>' % (m.author.username))
+    s.append('author: %s<p>' % (m.author.username))
     s.append("""
              <form action="add" method="POST">
-             <input type = 'hidden' name ='pID' value = %d>
              <input type = 'submit' value = 'Reply'>
+             <input type = 'hidden' name ='pID' value = %d>
              </form>""" % (m.id))
     s.append("""
              <form action = 'delete' method = 'POST'>
-             <input type = 'hidden' name = 'id' value = '%d'>
              <input type = 'submit' value = 'Delete Post'>
+             <input type = 'hidden' name = 'id' value = '%d'>
              </form>""" % (m.id))
 
     if(m.replies != []):
         for r in m.replies:
-            print_messages(meeplib.get_message(r), s)
+            print_messages(meeplib.get_message(r), s, level + 1)
+            s.append('</blockquote>')
             
     return s
