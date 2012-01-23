@@ -163,10 +163,10 @@ class MeepExampleApp(object):
         found = False
         for m in messages:
             if m.id == int(form['id'].value):
-                meeplib.delete_message(m)
-                s.append("Post Successfully Deleted.")
                 if m.pID != "!":
                     meeplib.delete_reply(m)
+                meeplib.delete_message(m)
+                s.append("Post Successfully Deleted.")
                 found = True
             if found == True:
                 break

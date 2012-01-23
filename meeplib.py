@@ -99,7 +99,10 @@ def delete_message(msg):
     assert isinstance(msg, Message)
     if(msg.replies != []):
         for r in msg.replies:
+            delete_reply(get_message(r))
             delete_message(_messages[r])
+            #msg.replies.remove(r)
+            print msg.replies
     print "Deleting message: " + str(msg.id)
     del _messages[msg.id]
 
@@ -107,6 +110,13 @@ def delete_message(msg):
 def add_reply(msg):
     message = get_message(int(msg.pID))
     message.replies.append(int(msg.id))
+
+def delete_reply(msg):
+    if(msg.pID != '!'):
+        pMsg = get_message(int(msg.pID))
+        pMsg.replies.remove(msg.id)
+        print pMsg.replies
+    return
 
 
 
