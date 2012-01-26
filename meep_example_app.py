@@ -19,36 +19,15 @@ class MeepExampleApp(object):
         start_response("200 OK", [('Content-type', 'text/html')])
 
         username = 'test'
-
-'''<<<<<<< HEAD
-        return ["""you are logged in as user: %s.
-                <p>
-                <form action = '/m/add' method = 'POST'>
-                <input type = 'hidden' name = 'pID' value = '!'>
-                <input type = 'submit' value = 'Add Message'>
-                </form>
-                <p>
-                <form  action = '/login'>
-                <input type = 'submit' value = 'Login'>
-                </form>
-                <p>
-                <form action = 'logout'>
-                <input type = 'submit' value = 'Logout'>
-                </form>
-                <p>
-                <form action = '/m/list'>
-                <input type = 'submit' value = 'Show Messages'>
-                </form>
-                """ % (username,)]
-======='''
+        
         return ["""<h1>Welcome!</h1><h2>Please Login or create an account.</h2>
 
-<form action='login' method='POST'>
-Username: <input type='text' name='username'><br>
-Password:<input type='text' name='password'><br>
-<input type='submit' value='Login'></form>
+        <form action='login' method='POST'>
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Login'></form>
 
-<p>Don't have an account? Create a user <a href='/create_user'>here</a>"""]
+        <p>Don't have an account? Create a user <a href='/create_user'>here</a>"""]
 
     def main_page(self, environ, start_response):
         try:
@@ -60,16 +39,38 @@ Password:<input type='text' name='password'><br>
         start_response("200 OK", headers)
         username = meeplib.get_curr_user()
 
-        return ["""%s logged in!<p><a href='/m/add'>Add a message</a><p><a href='/create_user'>Create User</a><p><a href='/logout'>Log out</a><p><a href='/m/messages'>Show messages</a><p><a href='/m/delete'>Delete a message</a>""" % (username,)]
+        #return ["""%s logged in!<p><a href='/m/add'>Add a message</a><p><a href='/create_user'>Create User</a><p><a href='/logout'>Log out</a><p><a href='/m/messages'>Show messages</a><p><a href='/m/delete'>Delete a message</a>""" % (username,)]
+
+        return ["""you are logged in as user: %s.
+                <p>
+                <form action = '/m/add' method = 'POST'>
+                <input type = 'hidden' name = 'pID' value = '!'>
+                <input type = 'submit' value = 'Add Message'>
+                </form>
+                <p>
+                <form  action = '/create_user'>
+                <input type = 'submit' value = 'Create User'>
+                </form>
+                <p>
+                <form action = 'logout'>
+                <input type = 'submit' value = 'Logout'>
+                </form>
+                <p>
+                <form action = '/m/list'>
+                <input type = 'submit' value = 'Show Messages'>
+                </form>
+                """ % (username,)]
+
+    
 
     def create_user(self, environ, start_response):
         headers = [('Content-type', 'text/html')]
         
         start_response("302 Found", headers)
         return """<form action='add_new_user' method='POST'>
-Username: <input type='text' name='username'><br>
-Password:<input type='text' name='password'><br>
-<input type='submit' value='Create User'></form>"""
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Create User'></form>"""
 
     def add_new_user(self, environ, start_response):
         print environ['wsgi.input']
@@ -171,13 +172,13 @@ Password:<input type='text' name='password'><br>
                  <input type = 'submit' value = 'Add Message'>
                  </form><p>""")
         s.append("""
-                 <form action = '../../'>
+                 <form action = '../main_page'>
                  <input type = 'submit' value = 'Index'>
                  </form>""")
         
         if not messages:
             s.append("There are no messages to display.<p>")
-        s.append("<a href='../../main_page'>Go Back to Main Page</a>")
+        #s.append("<a href='../../main_page'>Go Back to Main Page</a>")
        
             
         headers = [('Content-type', 'text/html')]
@@ -228,15 +229,14 @@ Password:<input type='text' name='password'><br>
 
         print "PID:" + pID + "!";
         
-        username = 'test'
+        username = meeplib.get_curr_user()
         user = meeplib.get_user(username)
         
         new_message = meeplib.Message(title, message, user, pID)
 
         headers = [('Content-type', 'text/html')]
-        headers.append(('Location', '/m/messages'))
+        headers.append(('Location', '/m/list'))
         start_response("302 Found", headers)
-<<<<<<< HEAD
 
         if(pID != '!'):
             return ["Message Added"]
@@ -255,6 +255,10 @@ Password:<input type='text' name='password'><br>
         found = False
         for m in messages:
             if m.id == int(form['id'].value):
+                if meeplib.get_curr_user() != m.author.username:
+                    print "i'm here"
+                    s.append("Cannot delete message that does not belong to you!")
+                    break
                 if m.pID != "!":
                     meeplib.delete_reply(m)
                 meeplib.delete_message(m)
@@ -264,7 +268,7 @@ Password:<input type='text' name='password'><br>
                 break
         
         start_response("200 OK", [('Content-type', 'text/html')])
-        s.append("<p><p><a href = '../../'>Return to Index</a>")
+        s.append("<p><p><a href = '/m/list'>Return to Messages</a>")
         return "".join(s)
 
     '''def reply_to_post(self, environ, start_response):
@@ -289,7 +293,7 @@ Password:<input type='text' name='password'><br>
                       '/add_new_user':self.add_new_user,
                       '/login': self.login,
                       '/logout': self.logout,
-                      '/m/messages': self.list_messages,
+                      '/m/list': self.list_messages,
                       '/m/add': self.add_message,
                       '/m/add_action': self.add_message_action,
                       '/m/delete': self.del_message
