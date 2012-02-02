@@ -320,21 +320,22 @@ class MeepExampleApp(object):
 def print_messages(m, s, level):
     if(level != 0):
         s.append('<blockquote>')
-        s.append('<hr>')
-    s.append('id: %d<br/>' % (m.id,))
-    s.append('title: %s<br/>' % (m.title))
-    s.append('message: %s<br/>' % (m.post))
-    s.append('author: %s<p>' % (m.author.username))
+    s.append('id: %d<br>' % (m.id,))
+    s.append('title: %s<br>' % (m.title))
+    s.append('message: %s<br>' % (m.post))
+    s.append('author: %s' % (m.author.username))
     s.append("""
-             <form action="add" method="POST">
-             <input type = 'submit' value = 'Reply'>
-             <input type = 'hidden' name ='pID' value = %d>
-             </form>""" % (m.id))
+             <form action = 'add' method = 'POST'  style="margin:0;">
+             <input type = 'submit' value = 'Reply' />
+             <input type = 'hidden' name = 'pID' value = '%d' />
+             </form>
+             <hr>""" % (m.id))
     s.append("""
-             <form action = 'delete' method = 'POST'>
-             <input type = 'submit' value = 'Delete Post'>
-             <input type = 'hidden' name = 'id' value = '%d'>
-             </form>""" % (m.id))
+             <form action = 'delete' method = 'POST'  style="margin:0;">
+             <input type = 'submit' value = 'Delete Post' />
+             <input type = 'hidden' name = 'id' value = '%d' />
+             </form>
+             <hr>""" % (m.id))
 
     if(m.replies != []):
         for r in m.replies:
