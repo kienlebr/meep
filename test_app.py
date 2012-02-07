@@ -31,8 +31,63 @@ class TestApp(unittest.TestCase):
             assert ('Content-type', 'text/html') in headers
 
         data = self.app(environ, fake_start_response)
+        #print data
         assert 'Username:' in data
         assert 'Password:' in data
+
+    def test_list_messages(self):
+        environ = {}                    # make a fake dict
+        environ['PATH_INFO'] = '/m/list'
+
+        u = meeplib.User('user', 'name')
+        m = meeplib.Message('init title', 'init message', u ,'!')
+
+        def fake_start_response(status, headers):
+            assert status == '200 OK'
+            assert ('Content-type', 'text/html') in headers
+
+        data = self.app(environ, fake_start_response)
+        index = 0
+        for m in data:
+            if"title: init title" in m:
+                index += 1
+            if 'message: init message' in m:
+                index += 1
+            if 'author: user' in m:
+                index += 1
+            if 'id: 0' in m:
+                index += 1
+
+            #print m
+        assert index is 4
+
+    def test_main_page(self):
+        environ = {}                    # make a fake dict
+        environ['PATH_INFO'] = '/main_page'
+
+        u = meeplib.User('user', 'name')
+        meeplib.set_curr_user(u.username)
+        m = meeplib.Message('init title', 'init message', u ,'!')
+
+        def fake_start_response(status, headers):
+            assert status == '200 OK'
+            assert ('Content-type', 'text/html') in headers
+
+        data = self.app(environ, fake_start_response)
+        index = 0
+        for m in data:
+            if "Add Message" in m:
+                index += 1
+            if 'Create User' in m:
+                index += 1
+            if 'Logout' in m:
+                index += 1
+            if 'Show Messages' in m:
+                index += 1
+
+            #print m
+        assert index is 4
+        
 
     def test_add_reply(self):
         u = meeplib.User('foo', 'bar')
