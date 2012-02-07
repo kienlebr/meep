@@ -1,0 +1,18 @@
+go http://localhost:8000/
+
+fv 1 username 'Name'
+fv 1 password 'password'
+submit
+
+fv 1 None 'Add Message'
+submit
+
+fv 1 title 'title'
+fv 1 message 'message'
+submit
+
+url '/m/list'
+
+find 'title: title'
+find 'message: message'
+find 'author: Name'
