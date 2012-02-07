@@ -1,13 +1,61 @@
 import meeplib
 import traceback
 import cgi
+import pickle
 
 def initialize():
     # create a default user
-    u = meeplib.User('test', 'foo')
+    #u = meeplib.User('test', 'foo')
 
     # create a single message
-    meeplib.Message('my title', 'This is my message!', u, "!")
+    #meeplib.Message('my title', 'This is my message!', u, "!")
+
+    try:
+        fp = open('users.pickle')
+        try:
+            obj = pickle.load(fp)
+            while True:
+                #print obj
+                (a, b) = obj
+                
+                u = meeplib.User(a, b);
+                try:
+                    obj = pickle.load(fp)
+                except EOFError:
+                    break
+        except EOFError:
+            pass
+    except IOError:
+        fp = open('users.pickle', "w")
+        fp.close()
+    
+    
+    try:
+        fp = open('messages.pickle')
+        try:
+            obj = pickle.load(fp)
+            while True:
+                (a, b, c, d, e) = obj
+                #print obj
+                m = meeplib.Message(a,b,meeplib.get_user(c), d)
+                m.id = e
+                #print m.post + " is " + str(m.id)
+                #obj = pickle.load(fp)
+                #m.replies = obj
+                #print obj
+                try:
+                    obj = pickle.load(fp)
+                except EOFError:
+                    break
+        except EOFError:
+            pass
+    except IOError:
+        p = open('messages.pickle', "w")
+        fp.close()
+    
+
+    
+    
 
     # done.
 
@@ -86,8 +134,8 @@ class MeepExampleApp(object):
         except KeyError:
             password = None
 
-        print username
-        print password
+        #print username
+        #print password
         # Test whether variable is defined to be None
         if username is None:
             returnStatement = "username was not set. User could not be created"
@@ -95,6 +143,7 @@ class MeepExampleApp(object):
             returnStatement = "password was not set. User could not be created"
         else:
             new_user = meeplib.User(username, password)
+            SaveUsers()
         
 
         headers = [('Content-type', 'text/html')]
@@ -135,7 +184,7 @@ class MeepExampleApp(object):
         else:
             returnStatement = """<p>username was not set. User could not be created</p>"""
 
-        print """isValidafter: %s """ %(meeplib.check_user(username, password),)
+        #print """isValidafter: %s """ %(meeplib.check_user(username, password),)
 
         # set content-type
         headers = [('Content-type', 'text/html')]
@@ -175,6 +224,13 @@ class MeepExampleApp(object):
                  <form action = '../main_page'>
                  <input type = 'submit' value = 'Index'>
                  </form>""")
+
+        for m in meeplib.get_all_messages():
+            print "Post: " + m.post
+            print "Author: " + m.author.username
+            print "ID: " + str(m.id)
+            print ""
+
         
         if not messages:
             s.append("There are no messages to display.<p>")
@@ -190,7 +246,7 @@ class MeepExampleApp(object):
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
 
         pID = form['pID'].value
-        print "PID:" + pID + "!";
+        #print "PID:" + pID + "!";
         
         headers = [('Content-type', 'text/html')]
         
@@ -220,14 +276,14 @@ class MeepExampleApp(object):
         return s
 
     def add_message_action(self, environ, start_response):
-        #print environ['wsgi.input']
+        print environ['wsgi.input']
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
 
         title = form['title'].value
         message = form['message'].value
         pID = form['pID'].value
 
-        print "PID:" + pID + "!";
+        #print "PID:" + pID + "!";
         
         username = meeplib.get_curr_user()
         user = meeplib.get_user(username)
@@ -237,6 +293,10 @@ class MeepExampleApp(object):
         headers = [('Content-type', 'text/html')]
         headers.append(('Location', '/m/list'))
         start_response("302 Found", headers)
+        
+        SaveMessages()
+
+        
 
         if(pID != '!'):
             return ["Message Added"]
@@ -244,10 +304,10 @@ class MeepExampleApp(object):
             return ["Reply Added"]
 
     def del_message(self, environ, start_response):
-        print environ['wsgi.input']
+        #print environ['wsgi.input']
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
 
-        print form
+        #print form
         
         messages = meeplib.get_all_messages()
 
@@ -256,19 +316,23 @@ class MeepExampleApp(object):
         for m in messages:
             if m.id == int(form['id'].value):
                 if meeplib.get_curr_user() != m.author.username:
-                    print "i'm here"
+                    #print "i'm here"
                     s.append("Cannot delete message that does not belong to you!")
                     break
                 if m.pID != "!":
                     meeplib.delete_reply(m)
                 meeplib.delete_message(m)
                 s.append("Post Successfully Deleted.")
+                #meeplib.ResetMessageIds()
                 found = True
             if found == True:
                 break
         
         start_response("200 OK", [('Content-type', 'text/html')])
         s.append("<p><p><a href = '/m/list'>Return to Messages</a>")
+
+        SaveMessages()
+
         return "".join(s)
 
     '''def reply_to_post(self, environ, start_response):
@@ -328,8 +392,7 @@ def print_messages(m, s, level):
              <form action = 'add' method = 'POST'  style="margin:0;">
              <input type = 'submit' value = 'Reply' />
              <input type = 'hidden' name = 'pID' value = '%d' />
-             </form>
-             <hr>""" % (m.id))
+             </form>""" % (m.id))
     s.append("""
              <form action = 'delete' method = 'POST'  style="margin:0;">
              <input type = 'submit' value = 'Delete Post' />
@@ -338,8 +401,39 @@ def print_messages(m, s, level):
              <hr>""" % (m.id))
 
     if(m.replies != []):
+        print m.replies
         for r in m.replies:
             print_messages(meeplib.get_message(r), s, level + 1)
             s.append('</blockquote>')
             
     return s
+
+def SaveMessages():
+    
+        #Save Messages
+        #
+        filename = 'messages.pickle'
+        fp = open(filename, 'w')
+        m = meeplib.get_all_messages()
+        for d in m:
+            f = [d.title, d.post, d.author.username, d.pID, d.id]
+            pickle.dump(f, fp)
+            #f = d.replies
+            #pickle.dump(f, fp)
+        fp.close()
+        return
+
+
+def SaveUsers():
+    #
+    #Save Users
+    #
+    filename = 'users.pickle'
+    fp = open(filename, 'w')
+    u = meeplib.get_all_users()
+    for d in u:
+        f = [d.username, d.password]
+        #print f
+        pickle.dump(f, fp)
+    fp.close()
+    return

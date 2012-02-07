@@ -41,7 +41,7 @@ class TestApp(unittest.TestCase):
         environ['PATH_INFO'] = '/main_page'
 
         def fake_start_response(status, headers):
-            #assert status == "200 OK"
+            assert status == "200 OK"
             assert ('Content-type', 'text/html') in headers
 
         data = self.app(environ, fake_start_response)

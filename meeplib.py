@@ -39,9 +39,13 @@ _messages = {}
 
 
 def _get_next_message_id():
+    ResetMessageIds()
     if _messages:
         return max(_messages.keys()) + 1
     return 0
+
+def ResetMessageIds():
+    return
 
 # a dictionary, storing all users by a (unique, int) ID -> User object.
 _user_ids = {}
@@ -103,8 +107,9 @@ def delete_message(msg):
     assert isinstance(msg, Message)
     if(msg.replies != []):
         for r in msg.replies:
-            delete_reply(get_message(r))
-            delete_message(_messages[r])
+            hold = r
+            #delete_reply(get_message(hold))
+            delete_message(_messages[hold])
     del _messages[msg.id]
 
 
