@@ -1,21 +1,18 @@
 go http://localhost:8000/
-follow "here"
 
 fv 1 username 'Name'
 fv 1 password 'password'
 submit
 
-fv 1 username 'Name'
-fv 1 password 'password'
+fv 1 None 'Add Message'
 submit
 
-echo __url__
-
-fv 4 None ''
+fv 1 title 'title'
+fv 1 message 'message'
 submit
 
-url /m/list
+url '/m/list'
 
-showforms
-
-
+find 'title: title'
+find 'message: message'
+find 'author: Name'
