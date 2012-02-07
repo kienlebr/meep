@@ -19,6 +19,27 @@ class MeepExampleApp(object):
         start_response("200 OK", [('Content-type', 'text/html')])
 
         username = 'test'
+        
+        return ["""<h1>Welcome!</h1><h2>Please Login or create an account.</h2>
+
+        <form action='login' method='POST'>
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Login'></form>
+
+        <p>Don't have an account? Create a user <a href='/create_user'>here</a>"""]
+
+    def main_page(self, environ, start_response):
+        try:
+            meeplib.get_curr_user()
+        except NameError:
+            meeplib.delete_curr_user()
+        headers = [('Content-type', 'text/html')]
+        
+        start_response("200 OK", headers)
+        username = meeplib.get_curr_user()
+
+        #return ["""%s logged in!<p><a href='/m/add'>Add a message</a><p><a href='/create_user'>Create User</a><p><a href='/logout'>Log out</a><p><a href='/m/messages'>Show messages</a><p><a href='/m/delete'>Delete a message</a>""" % (username,)]
 
         return ["""you are logged in as user: %s.
                 <p>
@@ -27,8 +48,8 @@ class MeepExampleApp(object):
                 <input type = 'submit' value = 'Add Message'>
                 </form>
                 <p>
-                <form  action = '/login'>
-                <input type = 'submit' value = 'Login'>
+                <form  action = '/create_user'>
+                <input type = 'submit' value = 'Create User'>
                 </form>
                 <p>
                 <form action = 'logout'>
@@ -40,23 +61,89 @@ class MeepExampleApp(object):
                 </form>
                 """ % (username,)]
 
-    def login(self, environ, start_response):
-        # hard code the username for now; this should come from Web input!
-        username = 'test'
+    
 
-        # retrieve user
-        user = meeplib.get_user(username)
+    def create_user(self, environ, start_response):
+        headers = [('Content-type', 'text/html')]
+        
+        start_response("302 Found", headers)
+        return """<form action='add_new_user' method='POST'>
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Create User'></form>"""
+
+    def add_new_user(self, environ, start_response):
+        print environ['wsgi.input']
+        form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
+
+        returnStatement = "user added"
+        try:
+            username = form['username'].value
+        except KeyError:
+            username = None
+        try:
+            password = form['password'].value
+        except KeyError:
+            password = None
+
+        print username
+        print password
+        # Test whether variable is defined to be None
+        if username is None:
+            returnStatement = "username was not set. User could not be created"
+        if password is None:
+            returnStatement = "password was not set. User could not be created"
+        else:
+            new_user = meeplib.User(username, password)
+        
+
+        headers = [('Content-type', 'text/html')]
+        headers.append(('Location', '/'))
+        start_response("302 Found", headers)
+
+        return [returnStatement]
+
+    def login(self, environ, start_response):
+        print environ['wsgi.input']
+        form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
+
+        returnStatement = "logged in"
+        try:
+            username = form['username'].value
+        except KeyError:
+            username = None
+        try:
+            password = form['password'].value
+        except KeyError:
+            password = None
+
+        # Test whether variable is defined to be None
+        if username is not None:
+             if password is not None:
+                 if meeplib.check_user(username, password) is False:
+                     k = 'Location'
+                     v = '/'
+                     returnStatement = """<p>Invalid user.  Please try again.</p>"""
+           
+                 else:
+                     new_user = meeplib.User(username, password)
+                     meeplib.set_curr_user(username)
+                     k = 'Location'
+                     v = '/main_page'
+             else:      
+                 returnStatement = """<p>password was not set. User could not be created</p>"""
+        else:
+            returnStatement = """<p>username was not set. User could not be created</p>"""
+
+        print """isValidafter: %s """ %(meeplib.check_user(username, password),)
 
         # set content-type
         headers = [('Content-type', 'text/html')]
-        
-        # send back a redirect to '/'
-        k = 'Location'
-        v = '/'
+       
         headers.append((k, v))
         start_response('302 Found', headers)
         
-        return "no such content"
+        return "no such content"    
 
     def logout(self, environ, start_response):
         # does nothing
@@ -85,9 +172,14 @@ class MeepExampleApp(object):
                  <input type = 'submit' value = 'Add Message'>
                  </form><p>""")
         s.append("""
-                 <form action = '../../'>
+                 <form action = '../main_page'>
                  <input type = 'submit' value = 'Index'>
                  </form>""")
+        
+        if not messages:
+            s.append("There are no messages to display.<p>")
+        #s.append("<a href='../../main_page'>Go Back to Main Page</a>")
+       
             
         headers = [('Content-type', 'text/html')]
         start_response("200 OK", headers)
@@ -137,7 +229,7 @@ class MeepExampleApp(object):
 
         print "PID:" + pID + "!";
         
-        username = 'test'
+        username = meeplib.get_curr_user()
         user = meeplib.get_user(username)
         
         new_message = meeplib.Message(title, message, user, pID)
@@ -163,6 +255,12 @@ class MeepExampleApp(object):
         found = False
         for m in messages:
             if m.id == int(form['id'].value):
+                if meeplib.get_curr_user() != m.author.username:
+                    print "i'm here"
+                    s.append("Cannot delete message that does not belong to you!")
+                    break
+                if m.pID != "!":
+                    meeplib.delete_reply(m)
                 meeplib.delete_message(m)
                 s.append("Post Successfully Deleted.")
                 found = True
@@ -170,10 +268,10 @@ class MeepExampleApp(object):
                 break
         
         start_response("200 OK", [('Content-type', 'text/html')])
-        s.append("<p><p><a href = '../../'>Return to Index</a>")
+        s.append("<p><p><a href = '/m/list'>Return to Messages</a>")
         return "".join(s)
 
-    def reply_to_post(self, environ, start_response):
+    '''def reply_to_post(self, environ, start_response):
         print environ['wsgi.input']
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
 
@@ -185,11 +283,14 @@ class MeepExampleApp(object):
         start_response("200 OK", [('Content-type', 'text/html')])
         s.append("<p><p><a href = '../../'>Return to Index</a>")
         return "".join(s)
-        
+        return ["message added"]'''
     
     def __call__(self, environ, start_response):
         # store url/function matches in call_dict
         call_dict = { '/': self.index,
+                      '/main_page': self.main_page,
+                      '/create_user': self.create_user,
+                      '/add_new_user':self.add_new_user,
                       '/login': self.login,
                       '/logout': self.logout,
                       '/m/list': self.list_messages,
@@ -219,21 +320,22 @@ class MeepExampleApp(object):
 def print_messages(m, s, level):
     if(level != 0):
         s.append('<blockquote>')
-        s.append('<hr>')
-    s.append('id: %d<br/>' % (m.id,))
-    s.append('title: %s<br/>' % (m.title))
-    s.append('message: %s<br/>' % (m.post))
-    s.append('author: %s<p>' % (m.author.username))
+    s.append('id: %d<br>' % (m.id,))
+    s.append('title: %s<br>' % (m.title))
+    s.append('message: %s<br>' % (m.post))
+    s.append('author: %s' % (m.author.username))
     s.append("""
-             <form action="add" method="POST">
-             <input type = 'submit' value = 'Reply'>
-             <input type = 'hidden' name ='pID' value = %d>
-             </form>""" % (m.id))
+             <form action = 'add' method = 'POST'  style="margin:0;">
+             <input type = 'submit' value = 'Reply' />
+             <input type = 'hidden' name = 'pID' value = '%d' />
+             </form>
+             <hr>""" % (m.id))
     s.append("""
-             <form action = 'delete' method = 'POST'>
-             <input type = 'submit' value = 'Delete Post'>
-             <input type = 'hidden' name = 'id' value = '%d'>
-             </form>""" % (m.id))
+             <form action = 'delete' method = 'POST'  style="margin:0;">
+             <input type = 'submit' value = 'Delete Post' />
+             <input type = 'hidden' name = 'id' value = '%d' />
+             </form>
+             <hr>""" % (m.id))
 
     if(m.replies != []):
         for r in m.replies:

@@ -1,0 +1,21 @@
+go http://localhost:8000/
+follow "here"
+
+fv 1 username 'Name'
+fv 1 password 'password'
+submit
+
+fv 1 username 'Name'
+fv 1 password 'password'
+submit
+
+echo __url__
+
+fv 4 None ''
+submit
+
+url /m/list
+
+showforms
+
+
