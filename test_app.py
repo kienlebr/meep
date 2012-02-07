@@ -34,19 +34,26 @@ class TestApp(unittest.TestCase):
         assert 'Username:' in data
         assert 'Password:' in data
 
-    def test_main_page(self):
+    def test_add_reply(self):
         u = meeplib.User('foo', 'bar')
-        meeplib.Message('the title', 'the content', u ,'!')
-        environ = {}                    # make a fake dict
-        environ['PATH_INFO'] = '/main_page'
+        m = meeplib.Message('the title', 'the content', u ,'!')
+        n = meeplib.Message('the reply title', 'the reply', u, m.id)
+        o = meeplib.Message('the 2nd title', 'the 2nd reply', u, n.id)
 
-        def fake_start_response(status, headers):
-            assert status == "200 OK"
-            assert ('Content-type', 'text/html') in headers
+        assert n.id in m.replies
+        assert o.id in n.replies
 
-        data = self.app(environ, fake_start_response)
-        print data
-        assert "Add Message" in data
+    def test_recursive_delete(self):
+        u = meeplib.User('foo', 'bar')
+        m = meeplib.Message('the title', 'the content', u ,'!')
+        n = meeplib.Message('the reply title', 'the reply', u, m.id)
+        o = meeplib.Message('the second tier title', 'the second reply', u, n.id)
+        
+        meeplib.delete_message(m)
+
+        assert n not in meeplib._messages.values()
+        assert o not in meeplib._messages.values()
+        
 
     def tearDown(self):
         pass
