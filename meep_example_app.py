@@ -225,11 +225,11 @@ class MeepExampleApp(object):
                  <input type = 'submit' value = 'Index'>
                  </form>""")
 
-        for m in meeplib.get_all_messages():
+        '''for m in meeplib.get_all_messages():
             print "Post: " + m.post
             print "Author: " + m.author.username
             print "ID: " + str(m.id)
-            print ""
+            print ""'''
 
         
         if not messages:

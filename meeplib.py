@@ -39,13 +39,10 @@ _messages = {}
 
 
 def _get_next_message_id():
-    ResetMessageIds()
     if _messages:
         return max(_messages.keys()) + 1
     return 0
 
-def ResetMessageIds():
-    return
 
 # a dictionary, storing all users by a (unique, int) ID -> User object.
 _user_ids = {}
