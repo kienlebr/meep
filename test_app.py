@@ -22,7 +22,7 @@ class TestApp(unittest.TestCase):
         #assert 'Password:' in data
         #assert 'Create a user' in data
 
-    def test_login(self):
+    def test_create_user(self):
         environ = {}                    # make a fake dict
         environ['PATH_INFO'] = '/create_user'
 
