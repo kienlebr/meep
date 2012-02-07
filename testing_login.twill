@@ -1,0 +1,16 @@
+go http://localhost:8000/
+follow "here"
+
+fv 1 username 'Name'
+fv 1 password 'password'
+submit
+
+fv 1 username 'Name'
+fv 1 password 'password'
+submit
+
+find "you are logged in as user: Name"
+find "Add Message"
+find "Create User"
+find "Logout"
+find "Show Messages"
