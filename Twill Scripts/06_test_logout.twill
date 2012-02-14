@@ -1,0 +1,10 @@
+go http://localhost:8000/
+
+fv 1 username 'Name'
+fv 1 password 'password'
+submit
+
+fv 3 None 'Logout'
+submit
+
+find 'Please Login or create an account.'

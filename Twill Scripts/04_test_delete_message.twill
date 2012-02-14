@@ -1,0 +1,14 @@
+go http://localhost:8000/
+
+fv 1 username 'Name'
+fv 1 password 'password'
+submit
+
+fv 4 None 'Show Messages'
+submit
+
+fv 4 None 'Delete Post'
+submit
+
+sleep 1
+url /m/list

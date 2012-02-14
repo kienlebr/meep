@@ -1,0 +1,157 @@
+	connect to localhost:8008	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x024A18B8>
+Sending:GET/Sending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accepttext/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 200 OK
+Date: Tue, 14 Feb 2012 06:26:36 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 356
+
+<h1>Welcome!</h1><h2>Please Login or create an account.</h2>
+
+        <form action='login' method='POST'>
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Login'></form>
+
+        <p>Don't have an account? Create a user <a href='/create_user'>here</a>	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x024A18B8>
+Sending:GET/Sending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accepttext/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 200 OK
+Date: Tue, 14 Feb 2012 06:26:36 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 356
+
+<h1>Welcome!</h1><h2>Please Login or create an account.</h2>
+
+        <form action='login' method='POST'>
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Login'></form>
+
+        <p>Don't have an account? Create a user <a href='/create_user'>here</a>	connect to localhost:8008	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x024A18F0>
+Sending:GET/favicon.icoSending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accept*/*Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 404 Not Found
+Date: Tue, 14 Feb 2012 06:26:37 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 15
+
+Page not found.	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x024A18F0>
+Sending:GET/favicon.icoSending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accept*/*Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 404 Not Found
+Date: Tue, 14 Feb 2012 06:26:37 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 15
+
+Page not found.	connect to localhost:8008	connect to localhost:8008	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x0242E0D8>
+Sending:GET/main_pageSending header:accept-languageen-US,en;q=0.8Sending header:connectioncloseSending header:accepttext/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:refererhttp://localhost:8008/Sending header:cache-controlmax-age=0Sending header:cookieusername=dudeSending header:accept-encodinggzip,deflate,sdchSending:HTTP/1.0 200 OK
+Date: Tue, 14 Feb 2012 06:26:40 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 723
+
+you are logged in as user: dude.
+                <p>
+                <form action = '/m/add' method = 'POST'>
+                <input type = 'hidden' name = 'pID' value = '!'>
+                <input type = 'submit' value = 'Add Message'>
+                </form>
+                <p>
+                <form  action = '/create_user'>
+                <input type = 'submit' value = 'Create User'>
+                </form>
+                <p>
+                <form action = 'logout'>
+                <input type = 'submit' value = 'Logout'>
+                </form>
+                <p>
+                <form action = '/m/list'>
+                <input type = 'submit' value = 'Show Messages'>
+                </form>
+                	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x0242E0D8>
+Sending:GET/main_pageSending header:accept-languageen-US,en;q=0.8Sending header:connectioncloseSending header:accepttext/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:refererhttp://localhost:8008/Sending header:cache-controlmax-age=0Sending header:cookieusername=dudeSending header:accept-encodinggzip,deflate,sdchSending:HTTP/1.0 200 OK
+Date: Tue, 14 Feb 2012 06:26:40 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 723
+
+you are logged in as user: dude.
+                <p>
+                <form action = '/m/add' method = 'POST'>
+                <input type = 'hidden' name = 'pID' value = '!'>
+                <input type = 'submit' value = 'Add Message'>
+                </form>
+                <p>
+                <form  action = '/create_user'>
+                <input type = 'submit' value = 'Create User'>
+                </form>
+                <p>
+                <form action = 'logout'>
+                <input type = 'submit' value = 'Logout'>
+                </form>
+                <p>
+                <form action = '/m/list'>
+                <input type = 'submit' value = 'Show Messages'>
+                </form>
+                	connect to localhost:8008	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x0242E0A0>
+Sending:GET/favicon.icoSending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accept*/*Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 404 Not Found
+Date: Tue, 14 Feb 2012 06:26:41 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 15
+
+Page not found.	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x0242E0A0>
+Sending:GET/favicon.icoSending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accept*/*Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 404 Not Found
+Date: Tue, 14 Feb 2012 06:26:41 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 15
+
+Page not found.	connect to localhost:8008	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x02525810>
+Sending:POST/m/addSending header:originhttp://localhost:8008Sending header:content-length7Sending header:accept-languageen-US,en;q=0.8Sending header:connectioncloseSending header:accepttext/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:refererhttp://localhost:8008/main_pageSending header:cache-controlmax-age=0Sending header:cookieusername=dudeSending header:content-typeapplication/x-www-form-urlencodedSending header:accept-encodinggzip,deflate,sdchSending:pID=%21Sending:HTTP/1.0 200 OK
+Date: Tue, 14 Feb 2012 06:26:41 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+
+Sending:
+                <form action='add_action' method='POST'>
+                Title:
+                     <input type='text' name='title'>
+                     Sending:
+                <br>
+                Message:
+                <input type='text' name='message'>
+                <br>
+                <input type='submit'>
+                <input type = 'hidden' name = 'pID' value = '!'>
+                </form>
+                	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x02525810>
+Sending:POST/m/addSending header:originhttp://localhost:8008Sending header:content-length7Sending header:accept-languageen-US,en;q=0.8Sending header:connectioncloseSending header:accepttext/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:refererhttp://localhost:8008/main_pageSending header:cache-controlmax-age=0Sending header:cookieusername=dudeSending header:content-typeapplication/x-www-form-urlencodedSending header:accept-encodinggzip,deflate,sdchSending:pID=%21Sending:HTTP/1.0 200 OK
+Date: Tue, 14 Feb 2012 06:26:41 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+
+Sending:
+                <form action='add_action' method='POST'>
+                Title:
+                     <input type='text' name='title'>
+                     Sending:
+                <br>
+                Message:
+                <input type='text' name='message'>
+                <br>
+                <input type='submit'>
+                <input type = 'hidden' name = 'pID' value = '!'>
+                </form>
+                	connect to localhost:8008	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x024A19D0>
+Sending:GET/favicon.icoSending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accept*/*Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 404 Not Found
+Date: Tue, 14 Feb 2012 06:26:42 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 15
+
+Page not found.	connect to localhost:8008Connecting to:localhost:8008<socket._socketobject object at 0x024A19D0>
+Sending:GET/favicon.icoSending header:accept-languageen-US,en;q=0.8Sending header:accept-encodinggzip,deflate,sdchSending header:connectioncloseSending header:accept*/*Sending header:user-agentMozilla/5.0 (Windows NT 6.0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.46 Safari/535.11Sending header:accept-charsetISO-8859-1,utf-8;q=0.7,*;q=0.3Sending header:hostlocalhost:8008Sending header:cookieusername=dudeSending:HTTP/1.0 404 Not Found
+Date: Tue, 14 Feb 2012 06:26:42 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 15
+
+Page not found.	connect to localhost:8008	connect to localhost:8008Connecting to:lo
