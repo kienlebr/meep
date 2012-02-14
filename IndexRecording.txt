@@ -1,0 +1,14 @@
+HTTP/1.0 200 OK
+Date: Tue, 14 Feb 2012 18:58:11 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Content-Length: 356
+
+<h1>Welcome!</h1><h2>Please Login or create an account.</h2>
+
+        <form action='login' method='POST'>
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Login'></form>
+
+        <p>Don't have an account? Create a user <a href='/create_user'>here</a>

@@ -1,0 +1,8 @@
+title=MsgTitle&message=MsgMsg&pID=%21HTTP/1.0 302 Found
+Date: Tue, 14 Feb 2012 18:58:32 GMT
+Server: WSGIServer/0.1 Python/2.7.2
+Content-type: text/html
+Location: /m/list
+Content-Length: 11
+
+Reply Added
