@@ -90,6 +90,8 @@ class TestApp(unittest.TestCase):
         
 
     def test_add_reply(self):
+        environ = {}                    # make a fake dict
+        environ['PATH_INFO'] = '/m/list'
         u = meeplib.User('foo', 'bar')
         m = meeplib.Message('the title', 'the content', u ,'!')
         n = meeplib.Message('the reply title', 'the reply', u, m.id)
@@ -97,6 +99,22 @@ class TestApp(unittest.TestCase):
 
         assert n.id in m.replies
         assert o.id in n.replies
+
+        meeplib.set_curr_user(u.username)
+        def fake_start_response(status, headers):
+            assert status == '200 OK'
+            assert ('Content-type', 'text/html') in headers
+
+        data = self.app(environ, fake_start_response)
+        index = 0
+        '''print data[0]
+        for m in data:
+                #print m
+                if 'Delete Post' in m:
+                    index += 1
+        print 'INDEX: '
+        print index'''
+        
 
     def test_recursive_delete(self):
         u = meeplib.User('foo', 'bar')
@@ -109,6 +127,8 @@ class TestApp(unittest.TestCase):
         assert n not in meeplib._messages.values()
         assert o not in meeplib._messages.values()
         
+    
+
 
     def tearDown(self):
         pass

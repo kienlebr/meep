@@ -1,3 +1,4 @@
+from Cookie import SimpleCookie
 import meeplib
 import traceback
 import cgi
@@ -52,6 +53,8 @@ def initialize():
     except IOError:
         p = open('messages.pickle', "w")
         fp.close()
+
+        
     
 
     
@@ -67,6 +70,10 @@ class MeepExampleApp(object):
         start_response("200 OK", [('Content-type', 'text/html')])
 
         username = 'test'
+
+        s = environ.get('HTTP_COOKIE', '')
+        print "First Cookie Info: "
+        print s
         
         return ["""<h1>Welcome!</h1><h2>Please Login or create an account.</h2>
 
@@ -188,6 +195,21 @@ class MeepExampleApp(object):
 
         # set content-type
         headers = [('Content-type', 'text/html')]
+
+        if returnStatement is "logged in":
+            c = SimpleCookie()
+            cookie_name, cookie_val = make_set_cookie_header('username', username)
+            headers.append((cookie_name, cookie_val))
+            '''c["name"] = 'MeepCookie'
+            c["name"]["path"] = ""
+            c["username"] = username
+            c["password"] = password
+            s = c.output()
+            c.set()
+            print "SECOND Cookie INFO: "
+            print s'''
+            print cookie_name + cookie_val
+            
        
         headers.append((k, v))
         start_response('302 Found', headers)
@@ -437,3 +459,20 @@ def SaveUsers():
         pickle.dump(f, fp)
     fp.close()
     return
+
+
+def make_set_cookie_header(name, value, path='/'):
+    """
+    Makes a 'Set-Cookie' header.
+    
+    """
+    c = SimpleCookie()
+    c[name] = value
+    c[name]['path'] = path
+    
+    # can also set expires and other stuff.  See
+    # Examples under http://docs.python.org/library/cookie.html.
+
+    s = c.output()
+    (key, value) = s.split(': ')
+    return (key, value)
