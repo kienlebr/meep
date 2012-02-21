@@ -31,6 +31,7 @@ def __main__():
     text = fp.read()
     list = text.split('\r\n')
     value = '';
+    thing =[]
     
     
 
@@ -50,13 +51,20 @@ def __main__():
         #    environ['HTTP_COOKIE'] == pair[1]
 
     def fake_start_response(status, headers):
-        hold = value
-        hold += (status + '\r\n')
+        #hold = value
+        #hold += (status + '\r\n')
+        thing.append(status)
+        thing.append(headers[0])
+        #thing.append(headers[1])
         assert status ==  '200 OK'
         assert ('Content-type', 'text/html') in headers 
+        #print thing
+        #print headers
 
     html = app(environ, fake_start_response)
     #print html
+
+    value += thing[0] + '\r\n'
 
     date = time.localtime()
     #print date
@@ -75,6 +83,19 @@ def __main__():
     value+= (':')
     value+= (str(date[5]))
     value+= (" GMT\r\n")
-    print value
+    value += 'Server: WSGIServer/0.1 Python/2.5\r\n'
+    value += str(thing[1][0]) + ': ' + str(thing[1][1]) + '\r\n'
+    #print html
+    html[0] = str(html[0]).strip('\n\r')
+    html[0] = str(html[0]).strip('\t')
+    value += '\r\n' + html[0] +'\r\n'
+    #print value
+    #print thing
+
+    filename = '1-response.txt'
+    fp = open(filename, 'wb')
+    fp.write(value)
+
+
     
 __main__()
