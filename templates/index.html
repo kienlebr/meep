@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}meep: Login!{% endblock title %}
+
+{% block body %}
+
+you are logged in as user: {{username}}.
+                <p>
+                <form action = '/m/add' method = 'POST'>
+                <input type = 'hidden' name = 'pID' value = '!'>
+                <input type = 'submit' value = 'Add Message'>
+                </form>
+                <p>
+                <form  action = '/create_user'>
+                <input type = 'submit' value = 'Create User'>
+                </form>
+                <p>
+                <form action = 'logout'>
+                <input type = 'submit' value = 'Logout'>
+                </form>
+                <p>
+                <form action = '/m/list'>
+                <input type = 'submit' value = 'Show Messages'>
+                </form>
+
+{% endblock body %}

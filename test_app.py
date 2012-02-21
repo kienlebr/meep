@@ -7,6 +7,7 @@ class TestApp(unittest.TestCase):
         meep_example_app.initialize()
         app = meep_example_app.MeepExampleApp()
         self.app = app
+        meeplib._reset()
 
     def test_index(self):
         environ = {}                    # make a fake dict
@@ -49,16 +50,16 @@ class TestApp(unittest.TestCase):
         data = self.app(environ, fake_start_response)
         index = 0
         for m in data:
-            if"title: init title" in m:
+            if "Title: init title" in m:
                 index += 1
-            if 'message: init message' in m:
+            if 'Message: init message' in m:
                 index += 1
-            if 'author: user' in m:
+            if 'Author: user' in m:
                 index += 1
-            if 'id: 0' in m:
+            if 'ID: 0' in m:
                 index += 1
 
-            #print m
+            print index
         assert index is 4
 
     def test_main_page(self):

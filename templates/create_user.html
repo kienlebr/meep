@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}meep: Messages!{% endblock title %}
+
+{% block body %}
+
+<form action='add_new_user' method='POST'>
+        Username: <input type='text' name='username'><br>
+        Password:<input type='password' name='password'><br>
+        <input type='submit' value='Create User'></form>
+
+{% endblock body %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}meep: add message!{% endblock title %}
+
+{% block body %}
+{% if pID == '!'}
+	<form action='add_action' method='POST'>
+	Title: <input type='text' name='title'><br>
+	Message:<input type='text' name='message'><br>
+	<input type='submit'></form>
+{% endif %}
+
+{% if pID != '!' %}
+	<form action='add_action' method='POST'>
+	Title: <input type='text' name='title', value = '{{ parentTitle }}'><br>
+	Message:<input type='text' name='message'><br>
+	<input type='submit'></form>
+{% endif %}
+
+{% endblock body %}

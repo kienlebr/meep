@@ -4,6 +4,8 @@ import traceback
 import cgi
 import pickle
 
+from jinja2 import Environment, FileSystemLoader
+
 def initialize():
     # create a default user
     #u = meeplib.User('test', 'foo')
@@ -54,6 +56,10 @@ def initialize():
         p = open('messages.pickle', "w")
         fp.close()
 
+
+
+env = Environment(loader=FileSystemLoader('templates'))
+
         
     
 
@@ -61,6 +67,11 @@ def initialize():
     
 
     # done.
+
+def render_page(filename, **variables):
+    template = env.get_template(filename)
+    x = template.render(**variables)
+    return str(x)
 
 class MeepExampleApp(object):
     """
@@ -72,17 +83,10 @@ class MeepExampleApp(object):
         username = 'test'
 
         s = environ.get('HTTP_COOKIE', '')
-        print "First Cookie Info: "
-        print s
+        #print "First Cookie Info: "
+        #print s
         
-        return ["""<h1>Welcome!</h1><h2>Please Login or create an account.</h2>
-
-        <form action='login' method='POST'>
-        Username: <input type='text' name='username'><br>
-        Password:<input type='password' name='password'><br>
-        <input type='submit' value='Login'></form>
-
-        <p>Don't have an account? Create a user <a href='/create_user'>here</a>"""]
+        return [render_page('login.html')]
 
     def main_page(self, environ, start_response):
         try:
@@ -94,27 +98,7 @@ class MeepExampleApp(object):
         start_response("200 OK", headers)
         username = meeplib.get_curr_user()
 
-        #return ["""%s logged in!<p><a href='/m/add'>Add a message</a><p><a href='/create_user'>Create User</a><p><a href='/logout'>Log out</a><p><a href='/m/messages'>Show messages</a><p><a href='/m/delete'>Delete a message</a>""" % (username,)]
-
-        return ["""you are logged in as user: %s.
-                <p>
-                <form action = '/m/add' method = 'POST'>
-                <input type = 'hidden' name = 'pID' value = '!'>
-                <input type = 'submit' value = 'Add Message'>
-                </form>
-                <p>
-                <form  action = '/create_user'>
-                <input type = 'submit' value = 'Create User'>
-                </form>
-                <p>
-                <form action = 'logout'>
-                <input type = 'submit' value = 'Logout'>
-                </form>
-                <p>
-                <form action = '/m/list'>
-                <input type = 'submit' value = 'Show Messages'>
-                </form>
-                """ % (username,)]
+        return [render_page('index.html', username=username)]
 
     
 
@@ -122,10 +106,8 @@ class MeepExampleApp(object):
         headers = [('Content-type', 'text/html')]
         
         start_response("302 Found", headers)
-        return """<form action='add_new_user' method='POST'>
-        Username: <input type='text' name='username'><br>
-        Password:<input type='password' name='password'><br>
-        <input type='submit' value='Create User'></form>"""
+
+        return render_page('create_user.html')
 
     def add_new_user(self, environ, start_response):
         print environ['wsgi.input']
@@ -200,14 +182,6 @@ class MeepExampleApp(object):
             c = SimpleCookie()
             cookie_name, cookie_val = make_set_cookie_header('username', username)
             headers.append((cookie_name, cookie_val))
-            '''c["name"] = 'MeepCookie'
-            c["name"]["path"] = ""
-            c["username"] = username
-            c["password"] = password
-            s = c.output()
-            c.set()
-            print "SECOND Cookie INFO: "
-            print s'''
             print cookie_name + cookie_val
             
        
@@ -230,72 +204,24 @@ class MeepExampleApp(object):
 
     def list_messages(self, environ, start_response):
         messages = meeplib.get_all_messages()
-
-        s = []
-        for m in messages:
-            if(m.pID == "!"):
-                s = print_messages(m, s, 0)
-        s.append('<hr>')
-            
-        s.append("""
-                 <form action = 'add' method = 'POST'>
-                 <input type = 'hidden' name = 'pID' value = '!'>
-                 <input type = 'submit' value = 'Add Message'>
-                 </form><p>""")
-        s.append("""
-                 <form action = '../main_page'>
-                 <input type = 'submit' value = 'Index'>
-                 </form>""")
-
-        '''for m in meeplib.get_all_messages():
-            print "Post: " + m.post
-            print "Author: " + m.author.username
-            print "ID: " + str(m.id)
-            print ""'''
-
-        
-        if not messages:
-            s.append("There are no messages to display.<p>")
-        #s.append("<a href='../../main_page'>Go Back to Main Page</a>")
-       
-            
+           
         headers = [('Content-type', 'text/html')]
         start_response("200 OK", headers)
         
-        return ["".join(s)]
+        return [render_page('list_messages.html', messages=messages)]
 
     def add_message(self, environ, start_response):
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
 
         pID = form['pID'].value
-        #print "PID:" + pID + "!";
         
         headers = [('Content-type', 'text/html')]
+        parentTitle = ""
         
         start_response("200 OK", headers)
-        s = []
-        s.append("""
-                <form action='add_action' method='POST'>
-                Title:""")
         if(pID != '!'):
-            title = "RE: " + meeplib.get_message(int(pID)).title
-            s.append("""
-                     <input type='text' name='title' value = %r>
-                     """ % title)
-        else:
-            s.append("""
-                     <input type='text' name='title'>
-                     """)
-        s.append("""
-                <br>
-                Message:
-                <input type='text' name='message'>
-                <br>
-                <input type='submit'>
-                <input type = 'hidden' name = 'pID' value = '%s'>
-                </form>
-                """ % pID)
-        return s
+            parentTitle = "RE: " + meeplib.get_message(int(pID)).title
+        return render_page('add_message.html', pID = pID, parentTitle = parentTitle);
 
     def add_message_action(self, environ, start_response):
         print environ['wsgi.input']
@@ -304,8 +230,6 @@ class MeepExampleApp(object):
         title = form['title'].value
         message = form['message'].value
         pID = form['pID'].value
-
-        #print "PID:" + pID + "!";
         
         username = meeplib.get_curr_user()
         user = meeplib.get_user(username)
@@ -333,43 +257,26 @@ class MeepExampleApp(object):
         
         messages = meeplib.get_all_messages()
 
-        s = []
+        s = "Yup"
         found = False
         for m in messages:
             if m.id == int(form['id'].value):
                 if meeplib.get_curr_user() != m.author.username:
-                    #print "i'm here"
-                    s.append("Cannot delete message that does not belong to you!")
+                    s= "Nope"
                     break
                 if m.pID != "!":
                     meeplib.delete_reply(m)
                 meeplib.delete_message(m)
-                s.append("Post Successfully Deleted.")
-                #meeplib.ResetMessageIds()
                 found = True
             if found == True:
                 break
         
         start_response("200 OK", [('Content-type', 'text/html')])
-        s.append("<p><p><a href = '/m/list'>Return to Messages</a>")
+        #s.append("<p><p><a href = '/m/list'>Return to Messages</a>")
 
         SaveMessages()
 
-        return "".join(s)
-
-    '''def reply_to_post(self, environ, start_response):
-        print environ['wsgi.input']
-        form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
-
-        parentID = form['id'].value;
-
-        s = []
-
-
-        start_response("200 OK", [('Content-type', 'text/html')])
-        s.append("<p><p><a href = '../../'>Return to Index</a>")
-        return "".join(s)
-        return ["message added"]'''
+        return render_page('del_message.html', s = s)
     
     def __call__(self, environ, start_response):
         # store url/function matches in call_dict

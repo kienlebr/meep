@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}meep: Message Deleted!{% endblock title %}
+
+{% block body %}
+
+{% if s == "Yup" %}
+Post Deleted
+{% endif %}
+
+{% if s == "Nope" %}
+Cannot Delete a Post that does not belong to you!
+{% endif %}
+
+
+<p><p><a href = '/m/list'>Return to Messages</a>
+
+{% endblock body %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}meep: Messages!{% endblock title %}
+
+{% block body %}
+
+{% if messages %}
+{% for message in messages %}
+	{% if message.pID == '!' %}
+		{{ print_message(message) }}
+	{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if not messages %}
+	No messages to display.
+{% endif %}
+		
+
+<form action = 'add' method = 'POST'>
+                 <input type = 'hidden' name = 'pID' value = '!'>
+                 <input type = 'submit' value = 'Add Message'>
+                 </form><p>
+<form action = '../main_page'>
+                 <input type = 'submit' value = 'Index'>
+                 </form>
+
+{% endblock body %}
+
+{% macro print_message(message) %}
+	ID: {{ message.id }} <br>
+	Title: {{ message.title }} <br>
+	Message: {{ message.post }} <br>
+	Author: {{ message.author.username }} <br>
+	<form action = 'add' method = 'POST'  style="margin:0;">
+            	<input type = 'submit' value = 'Reply' />
+            	<input type = 'hidden' name = 'pID' value = '{{ message.id }}' />
+           	</form>
+	<form action = 'delete' method = 'POST'  style="margin:0;">
+            	<input type = 'submit' value = 'Delete Post' />
+            	<input type = 'hidden' name = 'id' value = '{{ message.id }}' />
+           	</form>
+            	<hr>
+	{% if message.replies %}
+		{% for reply in message.replies %}
+			<blockquote>
+			{{ print_message(messages[reply]) }}
+			</blockquote>
+		{% endfor %}
+	{% endif %}
+{% endmacro %}
