@@ -7,8 +7,10 @@ submit
 fv 4 None 'Show Messages'
 submit
 
-fv 4 None 'Delete Post'
+fv 2 None 'Delete Post'
 submit
+
+follow 'Return to Messages'
 
 sleep 1
 url /m/list

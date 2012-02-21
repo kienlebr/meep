@@ -5,7 +5,6 @@ fv 1 password 'password'
 submit
 
 
-
 fv 4 None 'Show Messages'
 submit
 
@@ -15,8 +14,8 @@ submit
 fv 1 message 'reply!'
 submit
 
-url /m/list
+go http://localhost:8000/m/list
 
-find 'title: RE: title'
-find 'message: reply!'
-find 'author: Name'
+find 'Title: RE: title'
+find 'Message: reply!'
+find 'Author: Name'

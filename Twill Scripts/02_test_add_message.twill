@@ -11,8 +11,7 @@ fv 1 title 'title'
 fv 1 message 'message'
 submit
 
-url /m/list
 
-find 'title: title'
-find 'message: message'
-find 'author: Name'
+find 'Title: title'
+find 'Message: message'
+find 'Author: Name'
