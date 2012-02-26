@@ -3,7 +3,7 @@ import cgi
 import meep_example_app
 import time
 
-def __main__():
+def format_return(data):
     weekdays = {0: 'Sun',
                 1: 'Mon',
                 2: 'Tue',
@@ -26,10 +26,11 @@ def __main__():
                 12: 'Dec'
                 }
                 
-    filename = '1-request.txt'
-    fp = open(filename, 'rb')
-    text = fp.read()
-    list = text.split('\r\n')
+    #filename = '1-request.txt'
+    #fp = open(filename, 'rb')
+    #text = fp.read()
+    #text = data;
+    list = data.split('\r\n')
     value = '';
     thing =[]
     
@@ -39,35 +40,27 @@ def __main__():
 
     environ = {}
     hold = str(list[0]).split(' ')
-    value += (hold[0] + ' ')
+    value += ('HTTP/1.0' + ' ')
     environ['REQUEST_METHOD'] = hold[0]
     environ['PATH_INFO'] = hold[1]
     environ['SERVER_PROTOCOL'] = hold[2]
     for x in list:
         pair = str(x).split(": ")
-        if pair[0] == 'referer':
+        if pair[0] == 'Host':
+            #print pair[1]
             environ['SCRIPT_NAME'] = pair[1]
-        #if pair[0] == 'cookie':
-        #    environ['HTTP_COOKIE'] == pair[1]
 
     def fake_start_response(status, headers):
-        #hold = value
-        #hold += (status + '\r\n')
         thing.append(status)
         thing.append(headers[0])
-        #thing.append(headers[1])
-        assert status ==  '200 OK'
-        assert ('Content-type', 'text/html') in headers 
-        #print thing
-        #print headers
+        #assert status ==  '200 OK'
+        #assert ('Content-type', 'text/html') in headers 
 
     html = app(environ, fake_start_response)
-    #print html
 
     value += thing[0] + '\r\n'
 
     date = time.localtime()
-    #print date
     value+= ("Date: ")
     value+= (weekdays[date[6]])
     value+= (', ')
@@ -84,18 +77,20 @@ def __main__():
     value+= (str(date[5]))
     value+= (" GMT\r\n")
     value += 'Server: WSGIServer/0.1 Python/2.5\r\n'
+    #value += 'Content-type: text/plain\r\n'
     value += str(thing[1][0]) + ': ' + str(thing[1][1]) + '\r\n'
-    #print html
+    value += 'Content Length: '
+    value += str(html[0].__len__()) + '\r\n'
     html[0] = str(html[0]).strip('\n\r')
-    html[0] = str(html[0]).strip('\t')
-    value += '\r\n' + html[0] +'\r\n'
+    html[0] = str(html[0]).strip('\n')
+    #html[0] = str(html[0]).strip('<html>')
+    #html[0] = str(html[0]).strip('</html>')
+            
+    value += '\r\n' + html[0] + '\r\n'
+
     #print value
-    #print thing
+    return value
 
-    filename = '1-response.txt'
-    fp = open(filename, 'wb')
-    fp.write(value)
-
-
-    
-__main__()
+    #filename = '1-response.txt'
+    #fp = open(filename, 'wb')
+    #fp.write(value)
