@@ -61,32 +61,33 @@ def format_return(data):
     value += thing[0] + '\r\n'
 
     date = time.localtime()
-    value+= ("Date: ")
-    value+= (weekdays[date[6]])
-    value+= (', ')
-    value+= (str(date[2]))
-    value+= (' ')
-    value+= (months[date[1]])
-    value+= (' ')
-    value+= (str(date[0]))
-    value+= (' ')
-    value+= (str(date[3]))
-    value+= (':')
-    value+= (str(date[4]))
-    value+= (':')
-    value+= (str(date[5]))
-    value+= (" GMT\r\n")
+    value += ("Date: ")
+    value += (weekdays[date[6]])
+    value += (', ')
+    value += (str(date[2]))
+    value += (' ')
+    value += (months[date[1]])
+    value += (' ')
+    value += (str(date[0]))
+    value += (' ')
+    value += (str(date[3]))
+    value += (':')
+    value += (str(date[4]))
+    value += (':')
+    value += (str(date[5]))
+    value += (" GMT\r\n")
     value += 'Server: WSGIServer/0.1 Python/2.5\r\n'
-    #value += 'Content-type: text/plain\r\n'
     value += str(thing[1][0]) + ': ' + str(thing[1][1]) + '\r\n'
     value += 'Content Length: '
     value += str(html[0].__len__()) + '\r\n'
-    html[0] = str(html[0]).strip('\n\r')
-    html[0] = str(html[0]).strip('\n')
-    #html[0] = str(html[0]).strip('<html>')
-    #html[0] = str(html[0]).strip('</html>')
             
     value += '\r\n' + html[0] + '\r\n'
+
+
+    filename = 'WebpageRequest.txt'
+    fp = open(filename, 'wb')
+    fp.write(data);
+
 
     #print value
     return value

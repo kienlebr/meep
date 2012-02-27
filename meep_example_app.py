@@ -6,6 +6,8 @@ import pickle
 
 from jinja2 import Environment, FileSystemLoader
 
+
+
 def initialize():
     # create a default user
     #u = meeplib.User('test', 'foo')
@@ -74,6 +76,10 @@ def render_page(filename, **variables):
     return str(x)
 
 class MeepExampleApp(object):
+   
+   
+   
+   
     """
     WSGI app object.
     """
@@ -87,6 +93,10 @@ class MeepExampleApp(object):
         #print s
         
         return [render_page('login.html')]
+
+
+
+
 
     def main_page(self, environ, start_response):
         try:
@@ -102,6 +112,10 @@ class MeepExampleApp(object):
 
     
 
+
+
+
+
     def create_user(self, environ, start_response):
         headers = [('Content-type', 'text/html')]
         
@@ -109,8 +123,12 @@ class MeepExampleApp(object):
 
         return render_page('create_user.html')
 
+
+
+
+
     def add_new_user(self, environ, start_response):
-        print environ['wsgi.input']
+        #print environ['wsgi.input']
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
 
         returnStatement = "user added"
@@ -140,6 +158,10 @@ class MeepExampleApp(object):
         start_response("302 Found", headers)
 
         return [returnStatement]
+
+
+
+
 
     def login(self, environ, start_response):
         print environ['wsgi.input']
@@ -190,6 +212,10 @@ class MeepExampleApp(object):
         
         return "no such content"    
 
+
+
+
+
     def logout(self, environ, start_response):
         # does nothing
         headers = [('Content-type', 'text/html')]
@@ -202,6 +228,10 @@ class MeepExampleApp(object):
         
         return "no such content"
 
+
+
+
+
     def list_messages(self, environ, start_response):
         messages = meeplib.get_all_messages()
            
@@ -209,6 +239,10 @@ class MeepExampleApp(object):
         start_response("200 OK", headers)
         
         return [render_page('list_messages.html', messages=messages)]
+
+
+
+
 
     def add_message(self, environ, start_response):
         form = cgi.FieldStorage(fp=environ['wsgi.input'], environ=environ)
@@ -222,6 +256,10 @@ class MeepExampleApp(object):
         if(pID != '!'):
             parentTitle = "RE: " + meeplib.get_message(int(pID)).title
         return render_page('add_message.html', pID = pID, parentTitle = parentTitle);
+
+
+
+
 
     def add_message_action(self, environ, start_response):
         print environ['wsgi.input']
@@ -242,12 +280,14 @@ class MeepExampleApp(object):
         
         SaveMessages()
 
-        
-
         if(pID != '!'):
             return ["Message Added"]
         else:
             return ["Reply Added"]
+
+
+
+
 
     def del_message(self, environ, start_response):
         #print environ['wsgi.input']
@@ -278,6 +318,10 @@ class MeepExampleApp(object):
 
         return render_page('del_message.html', s = s)
     
+
+
+
+
     def __call__(self, environ, start_response):
         # store url/function matches in call_dict
         call_dict = { '/': self.index,
@@ -310,6 +354,13 @@ class MeepExampleApp(object):
             start_response(status, [('Content-type', 'text/html')])
             return [x]
 
+
+
+
+
+
+
+
 def print_messages(m, s, level):
     if(level != 0):
         s.append('<blockquote>')
@@ -337,6 +388,9 @@ def print_messages(m, s, level):
             
     return s
 
+
+
+
 def SaveMessages():
     
         #Save Messages
@@ -351,6 +405,9 @@ def SaveMessages():
             #pickle.dump(f, fp)
         fp.close()
         return
+
+
+
 
 
 def SaveUsers():

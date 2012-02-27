@@ -24,16 +24,18 @@ def handle_connection(sock):
 
             sock.sendall(data)
             print "data sent"
-
-            if '.\r\n' in data:
-                sock.close()
-                break
-        except socket.error:
+            sock.close()
             break
 
+        except socket.error:
+            break
+    print "Done"
+
 if __name__ == '__main__':
-    interface, port = sys.argv[1:3]
-    port = int(port)
+    #interface, port = sys.argv[1:3]
+
+    port = 8000
+    interface = 'localhost'
 
     print 'binding', interface, port
     sock = socket.socket()
