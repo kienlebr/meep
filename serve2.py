@@ -6,30 +6,39 @@ import miniapp
 
 def handle_connection(sock):
     print 'handling connection...'
-    while 1:
-        try:
-            print 'recieving data...'
-            data = sock.recv(4096)
-            print 'data recieved...'
-            if not data:
-                print 'No data...'
-                break
+    try:
+        print 'recieving data...'
+        data = ''
+        recieved = sock.recv(1024)
+        if(recieved):
+            while(1):
+                data += recieved
+                if len(recieved) < 1024:
+                    break
+                else:
+                    recieved = sock.recv(1024)
+        elif not data:
+            print 'no data recieved'
+            return
+        print 'data recieved...'
+        print ''
+        print data
+        print ''
 
-            #print 'data:', (data,)
-            data = miniapp.format_return(data)
+        #print 'data:', (data,)
+        data = miniapp.format_return(data)
 
-            #print 'data:', (data,)
-            data = str(data)
-            #print 'data:', (data,)
+        #print 'data:', (data,)
+        data = str(data)
+        #print 'data:', (data,)
 
-            sock.sendall(data)
-            print "data sent"
-            sock.close()
-            break
+        sock.sendall(data)
+        print "data sent"
+        sock.close()
 
-        except socket.error:
-            break
-    print "Done"
+    except socket.error:
+        return
+print "Done"
 
 if __name__ == '__main__':
     #interface, port = sys.argv[1:3]
