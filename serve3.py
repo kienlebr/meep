@@ -42,20 +42,6 @@ def handle_connection(sock):
     sock.close()
     print "Done"
 
-#Dependency Injection
-#Woooo
-#class _fake_socket(object):
-#    closed = False
-#    def recv(self, size):
-#        return 'some data.\r\n'
-#    
-#    def sendall(self, data):
-#        assert data == 'some data.\r\n'
-#        
-#    def close(self):
-#        self.closed = True
-#        
-#handle_connection(_fake_socket())
 
 if __name__ == '__main__':
     #interface, port = sys.argv[1:3]
@@ -67,11 +53,13 @@ if __name__ == '__main__':
     sock = socket.socket()
     sock.bind( (interface, port) )
     sock.listen(5)
-    #threads = []
+    threads = []
     while 1:
         print 'waiting...'
         (client_sock, client_address) = sock.accept()
         print 'got connection', client_address
+        T1 = threading.Thread(target=handle_connection, args=(client_sock,));
+        T1.run();
         #print client_sock
         handle_connection(client_sock)
 
