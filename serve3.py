@@ -46,7 +46,7 @@ def handle_connection(sock):
 if __name__ == '__main__':
     #interface, port = sys.argv[1:3]
 
-    port = 8000
+    port = 80
     interface = 'localhost'
 
     print 'binding', interface, port
