@@ -42,10 +42,25 @@ def handle_connection(sock):
     sock.close()
     print "Done"
 
+#Dependency Injection
+#Woooo
+#class _fake_socket(object):
+#    closed = False
+#    def recv(self, size):
+#        return 'some data.\r\n'
+#    
+#    def sendall(self, data):
+#        assert data == 'some data.\r\n'
+#        
+#    def close(self):
+#        self.closed = True
+#        
+#handle_connection(_fake_socket())
+
 if __name__ == '__main__':
     #interface, port = sys.argv[1:3]
 
-    port = 8000
+    port = 80
     interface = 'localhost'
 
     print 'binding', interface, port
