@@ -176,12 +176,16 @@ class MeepExampleApp(object):
             password = form['password'].value
         except KeyError:
             password = None
+        
+        k = ''
+        v = ''
+        print "USERNAME: " + username + "!"
 
         # Test whether variable is defined to be None
         if username is not None:
              if password is not None:
                  if meeplib.check_user(username, password) is False:
-                     k = 'Location'
+                     k = 'Location' 
                      v = '/'
                      returnStatement = """<p>Invalid user.  Please try again.</p>"""
            
@@ -210,7 +214,8 @@ class MeepExampleApp(object):
         headers.append((k, v))
         start_response('302 Found', headers)
         
-        return "no such content"    
+        #return self.main_page(environ, start_response)
+        return returnStatement   
 
 
 
