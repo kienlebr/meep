@@ -22,6 +22,17 @@ def handle_connection(sock):
             else:
                 index = 0
             if index == 4:
+                if("POST" in data[0:5]):
+                    content = data.find("Content-Length:")
+                    content += 16
+                    #print "MAH CONTENT LENGTHES!: "
+                    length = ''
+                    while(data[content].isdigit()):
+                        length += data[content]
+                        content += 1
+                    recieved = sock.recv(int(content))
+                    #print recieved
+                    data += recieved
                 break;
             if not data:
                 print 'no data recieved'
