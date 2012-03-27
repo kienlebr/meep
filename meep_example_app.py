@@ -3,10 +3,13 @@ import meeplib
 import traceback
 import cgi
 import pickle
+import file_server
 
 from jinja2 import Environment, FileSystemLoader
 
-
+mimeTable = {"jpg" : "image/jpeg",
+             "png" : "image/png",
+             "ogg" : "audio/ogg"}
 
 def initialize():
     # create a default user
@@ -345,7 +348,12 @@ class MeepExampleApp(object):
         url = environ['PATH_INFO']
         fn = call_dict.get(url)
 
-        if fn is None:
+        was_picture = False
+        if(url.startswith('/files/')):
+            fn = file_server.file_server(url[len('/files/'):])
+            was_picture = True
+
+        if fn is None and not was_picture:
             start_response("404 Not Found", [('Content-type', 'text/html')])
             return ["Page not found."]
 
