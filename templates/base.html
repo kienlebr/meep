@@ -1,14 +1,11 @@
 <html>
-<head>
 {% block head %}
 <title>{% block title %}meeeeeeep!{% endblock title %}</title>
-<link rel="stylesheet" type="text/css" href="/styles.css">
-{% endblock %}
-</head>
-<link rel="stylesheet" href="files\styles.css" type='text/css"/>
-<body>
-<div id='content'>
+<link rel="stylesheet" type="text/css" href="files/styles.css">
+{% endblock head %}
+
 {% block body %}
+<div id='content'>
 {% endblock %}
 </div>
 </body>

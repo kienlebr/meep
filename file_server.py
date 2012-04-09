@@ -20,7 +20,5 @@ class file_server(object):
 
         data = fp.read()
         start_response("200 OK", [('Content-type', mimeTable.get(self.filename.split('.')[-1]))])
-        #data = "<img src='" + self.filename + "' alt='picture'/>"
-        #print self.filename
 
         return data
