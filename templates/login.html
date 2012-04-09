@@ -1,15 +1,21 @@
 {% extends "base.html" %}
-
-{% block title %}meep: Login!{% endblock title %}
+{% block head %}
+{% block title %}<title>meep: Login!</title>{% endblock title %}
+<!--<link rel="stylesheet" type="text/css" href="templates/styles.css">-->
+{% endblock %}
 
 {% block body %}
+<div id="header">
 <h1>Welcome!</h1><h2>Please Login or create an account.</h2>
+</div>
 
+<div id="content">
 <form action='login' method='POST'>
 Username: <input type='text' name='username'><br>
 Password:<input type='password' name='password'><br>
 <input type='submit' value='Login'></form>
 
 <p>Don't have an account? Create a user <a href='/create_user'>here</a>
+</div>
 
 {% endblock body %}

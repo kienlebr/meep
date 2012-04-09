@@ -40,16 +40,18 @@ def handle_connection(sock):
 
         except socket.error:
             return
+    if data:
+        #print 'data:', (data,)
+        data = miniapp.format_return(data)
 
-    #print 'data:', (data,)
-    data = miniapp.format_return(data)
+        #print 'data:', (data,)
+        data = str(data)
+        #print 'data:', (data,)
 
-    #print 'data:', (data,)
-    data = str(data)
-    #print 'data:', (data,)
-
-    sock.sendall(data)
-    print "data sent"
+        sock.sendall(data)
+        print "data sent"
+    else:
+        print 'No data'
     sock.close()
     print "Done"
 
