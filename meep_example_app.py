@@ -9,7 +9,8 @@ from jinja2 import Environment, FileSystemLoader
 
 mimeTable = {"jpg" : "image/jpeg",
              "png" : "image/png",
-             "ogg" : "audio/ogg"}
+             "ogg" : "audio/ogg",
+             "css" : "text/css"}
 
 def initialize():
     # create a default user

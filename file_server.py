@@ -4,7 +4,8 @@ import cgi
 
 mimeTable = {"jpg" : "image/jpeg",
              "png" : "image/png",
-             "ogg" : "audio/ogg"}
+             "ogg" : "audio/ogg",
+             "css" : "text/css"}
 
 class file_server(object):
     def __init__(self, filename):
@@ -12,7 +13,7 @@ class file_server(object):
 
     def __call__(self, environ, start_response):
         try:
-            fp = open('files/' + self.filename)
+            fp = open('files/' + self.filename, 'rb')
         except IOError:
             start_response("404 not found", [('Content-type', 'text/html'),])
             return 'file not found'
