@@ -80,7 +80,7 @@ class Message(object):
         self.replies = []
         self.pID = pID
 
-        assert isinstance(author, User)
+        #assert isinstance(author, User)
         self.author = author
         
         self._save_message()

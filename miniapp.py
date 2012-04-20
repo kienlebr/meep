@@ -40,7 +40,7 @@ def format_return(data):
     thing =[]
     
     
-
+    
     app = meep_example_app.MeepExampleApp()
 
     environ = {}
@@ -64,17 +64,17 @@ def format_return(data):
 
     environ["wsgi.version"] = (1,1)
     if(hold[0] == "POST"):
-        print list
+        #print list
         vars = list[-1].split('&')
         s = []
-        print vars
+        #print vars
         for x in vars:
             values = x.split('=')
-            print values
+            #print values
             s.append({values[0]: values[1]})
         
-        for x in s:
-            print x
+        #for x in s:
+        #    print x
 
         #filename = 'wsgiinput.txt'
         #fp = open(filename, 'wb')
@@ -88,9 +88,9 @@ def format_return(data):
     def fake_start_response(status, headers):
         thing.append(status)
         thing.extend(headers)
-    print "xxxxxxxxxxxxx"
+    #print "xxxxxxxxxxxxx"
     html = app(environ, fake_start_response)
-    print "zzzzzzzzzzzzzzzzz"
+    #print "zzzzzzzzzzzzzzzzz"
     value += thing[0] + '\r\n'
 
 
@@ -114,8 +114,8 @@ def format_return(data):
     #value += str(thing[1][0]) + ': ' + str(thing[1][1]) + '\r\n'
     for k,v in thing[1:]:
         value += k + ": " + v + "\r\n"
-        print "K: " + k
-        print "V: " + v
+        #print "K: " + k
+        #print "V: " + v
     value += 'Content Length: '
     realhtml = ''
     for x in html:
@@ -125,18 +125,18 @@ def format_return(data):
     value += '\r\n' + realhtml + '\r\n'
 
 
-    filename = 'WebpageRequest.txt'
-    fp = open(filename, 'wb')
-    fp.write(data)
-    fp.close()
+    #filename = 'WebpageRequest.txt'
+    #fp = open(filename, 'wb')
+    #fp.write(data)
+    #fp.close()
 
-    filename = 'WebpageResponse.txt'
-    fp = open(filename, 'wb')
-    fp.write(value)
-    fp.close()
+    #filename = 'WebpageResponse.txt'
+    #fp = open(filename, 'wb')
+    #fp.write(value)
+    #fp.close()
 
-    print data[:50]
-    print value[:50]
+    #print data[:50]
+    #print value[:50]
 
 
     return value

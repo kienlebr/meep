@@ -3,6 +3,7 @@ import sys
 import os
 import socket
 import miniapp
+import meep_example_app
 
 import time
 import threading
@@ -26,7 +27,7 @@ def handle_connection(sock):
                     #while(data[content].isdigit()):
                     #    length += data[content]
                     #    content += 1
-                    print "LENGTH: ", length
+                    #print "LENGTH: ", length
                     if length:
                         recieved = sock.recv(int(length))
                         #print recieved
@@ -60,6 +61,7 @@ if __name__ == '__main__':
 
     port = 80
     interface = 'localhost'
+    meep_example_app.initialize()
 
     print 'binding', interface, port
     sock = socket.socket()

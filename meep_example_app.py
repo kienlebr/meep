@@ -4,6 +4,7 @@ import traceback
 import cgi
 import pickle
 import file_server
+import sqlite3
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -15,54 +16,64 @@ mimeTable = {"jpg" : "image/jpeg",
 def initialize():
     
 
-    try:
-        fp = open('users.pickle')
-        try:
-            obj = pickle.load(fp)
-            while True:
-                #print obj
-                (a, b) = obj
-                
-                u = meeplib.User(a, b);
-                try:
-                    obj = pickle.load(fp)
-                except EOFError:
-                    break
-        except EOFError:
-            pass
-    except IOError:
-        fp = open('users.pickle', "w")
-        fp.close()
-    
-    
-    try:
-        fp = open('messages.pickle')
-        try:
-            obj = pickle.load(fp)
-            while True:
-                (a, b, c, d, e) = obj
-                #print obj
-                m = meeplib.Message(a,b,meeplib.get_user(c), d)
-                m.id = e
-                #print m.post + " is " + str(m.id)
-                #obj = pickle.load(fp)
-                #m.replies = obj
-                #print obj
-                try:
-                    obj = pickle.load(fp)
-                except EOFError:
-                    break
-        except EOFError:
-            pass
-    except IOError:
-        p = open('messages.pickle', "w")
-        fp.close()
+    #try:
+    #    fp = open('users.pickle')
+    #    try:
+    #        obj = pickle.load(fp)
+    #        while True:
+    #            #print obj
+    #            (a, b) = obj
+    #            
+    #            u = meeplib.User(a, b);
+    #            try:
+    #                obj = pickle.load(fp)
+    #            except EOFError:
+    #                break
+    #    except EOFError:
+    #        pass
+    #except IOError:
+    #    fp = open('users.pickle', "w")
+    #    fp.close()
+    #
+    #
+    #try:
+    #    fp = open('messages.pickle')
+    #    try:
+    #        obj = pickle.load(fp)
+    #        while True:
+    #            (a, b, c, d, e) = obj
+    #            m = meeplib.Message(a,b,meeplib.get_user(c), d)
+    #            m.id = e
+    #            try:
+    #                obj = pickle.load(fp)
+    #            except EOFError:
+    #                break
+    #    except EOFError:
+    #        pass
+    #except IOError:
+    #    p = open('messages.pickle', "w")
+    #    fp.close()
 
-      # create a default user
-    u = meeplib.User('test', 'foo')
+    #Create Tables!
+    conn = sqlite3.connect('meep.db')
+    c = conn.cursor()
+    try:
+        c.execute('''CREATE TABLE Users(username text, password text)''')
+    except:
+        pass
+    try:
+        c.execute('''CREATE TABLE Message(title text, post text, author text, pid text)''')
+    except:
+        #c.execute("TRUNCATE TABLE Message")  
+        pass
+    conn.commit()
 
-    # create a single message
-    meeplib.Message('my title', 'This is my message!', u, "!")
+    print 'STARTING UP!'
+    #  # create a default user
+    #u = meeplib.User('test', 'foo')
+
+    ## create a single message
+    #meeplib.Message('my title', 'This is my message!', u, "!")
 
 
 
@@ -82,13 +93,11 @@ def render_page(filename, **variables):
     return str(x)
 
 class MeepExampleApp(object):
+  
    
-   
-   
-   
-    """
-    WSGI app object.
-    """
+    #"""
+    #WSGI app object.
+    #"""
     def index(self, environ, start_response):
         start_response("200 OK", [('Content-type', 'text/html')])
 
@@ -105,16 +114,16 @@ class MeepExampleApp(object):
 
 
     def main_page(self, environ, start_response):
-        try:
-            meeplib.get_curr_user()
-        except NameError:
-            meeplib.delete_curr_user()
+        #try:
+        #    meeplib.get_curr_user()
+        #except NameError:
+        #    meeplib.delete_curr_user()
         headers = [('Content-type', 'text/html')]
         
         start_response("200 OK", headers)
         username = meeplib.get_curr_user()
 
-        return [render_page('index.html', username=username)]
+        return [render_page('index.html')]
 
     
 
@@ -146,6 +155,14 @@ class MeepExampleApp(object):
             password = form['password'].value
         except KeyError:
             password = None
+
+        conn = sqlite3.connect('meep.db')
+
+        c = conn.cursor()
+
+        if username and password:
+            c.execute("INSERT INTO Users VALUES('" + username + "', '" + password + "')")
+            conn.commit()
 
         #print username
         #print password
@@ -185,25 +202,39 @@ class MeepExampleApp(object):
         
         k = ''
         v = ''
-        print "USERNAME: " + username + "!"
+
+        conn = sqlite3.connect('meep.db')
+        c = conn.cursor()
+        if username and password:
+            c.execute("SELECT * FROM Users WHERE username = '" + username + "' AND password = '" + password + "'")
+            if c.fetchone():
+                k = 'Location'
+                v = '/main_page'
+                returnStatement = "logged in"
+                meeplib.set_curr_user(username)
+        else:
+            k = 'Location' 
+            v = '/'
+            returnStatement = """<p>Invalid user.  Please try again.</p>"""
+            
 
         # Test whether variable is defined to be None
-        if username is not None:
-             if password is not None:
-                 if meeplib.check_user(username, password) is False:
-                     k = 'Location' 
-                     v = '/'
-                     returnStatement = """<p>Invalid user.  Please try again.</p>"""
-           
-                 else:
-                     new_user = meeplib.User(username, password)
-                     meeplib.set_curr_user(username)
-                     k = 'Location'
-                     v = '/main_page'
-             else:      
-                 returnStatement = """<p>password was not set. User could not be created</p>"""
-        else:
-            returnStatement = """<p>username was not set. User could not be created</p>"""
+        #if username is not None:
+        #     if password is not None:
+        #         if meeplib.check_user(username, password) is False:
+        #             k = 'Location' 
+        #             v = '/'
+        #             returnStatement = """<p>Invalid user.  Please try again.</p>"""
+        #   
+        #         else:
+        #             new_user = meeplib.User(username, password)
+        #             meeplib.set_curr_user(username)
+        #             k = 'Location'
+        #             v = '/main_page'
+        #     else:      
+        #         returnStatement = """<p>password was not set. User could not be created</p>"""
+        #else:
+        #    returnStatement = """<p>username was not set. User could not be created</p>"""
 
         #print """isValidafter: %s """ %(meeplib.check_user(username, password),)
 
@@ -219,7 +250,7 @@ class MeepExampleApp(object):
        
         headers.append((k, v))
         start_response('302 Found', headers)
-        
+        print "everything seems to be working up till now..."
         #return self.main_page(environ, start_response)
         return returnStatement   
 
@@ -244,6 +275,16 @@ class MeepExampleApp(object):
 
 
     def list_messages(self, environ, start_response):
+        user = meeplib.get_curr_user();
+        meeplib._reset()
+        meeplib.set_curr_user(user)
+        conn = sqlite3.connect('meep.db')
+        c = conn.cursor()
+        for row in c.execute("SELECT * FROM Message"):
+            print row
+            meeplib.Message(row[0], row[1], row[2], row[3])
+        
+
         messages = meeplib.get_all_messages()
            
         headers = [('Content-type', 'text/html')]
@@ -283,13 +324,18 @@ class MeepExampleApp(object):
         username = meeplib.get_curr_user()
         user = meeplib.get_user(username)
         
-        new_message = meeplib.Message(title, message, user, pID)
+        conn = sqlite3.connect('meep.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO Message VALUES('" + title + "', '" + message + "', '" + username + "', '" + pID + "')")
+        conn.commit()
+
+        #new_message = meeplib.Message(title, message, user, pID)
 
         headers = [('Content-type', 'text/html')]
         headers.append(('Location', '/m/list'))
         start_response("302 Found", headers)
         
-        SaveMessages()
+        #SaveMessages()
 
         if(pID != '!'):
             return ["Message Added"]
