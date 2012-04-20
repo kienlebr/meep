@@ -17,22 +17,20 @@ def handle_connection(sock):
         try:
             recieved = sock.recv(1)
             data += recieved;
-            if recieved == endset[index]:
-                index+=1
-            else:
-                index = 0
-            if index == 4:
+            if endset in data:
                 if("POST" in data[0:5]):
                     content = data.find("Content-Length:")
                     content += 16
                     #print "MAH CONTENT LENGTHES!: "
-                    length = ''
-                    while(data[content].isdigit()):
-                        length += data[content]
-                        content += 1
-                    recieved = sock.recv(int(content))
-                    #print recieved
-                    data += recieved
+                    length = int(data[content:].split()[0])
+                    #while(data[content].isdigit()):
+                    #    length += data[content]
+                    #    content += 1
+                    print "LENGTH: ", length
+                    if length:
+                        recieved = sock.recv(int(length))
+                        #print recieved
+                        data += recieved
                 break;
             if not data:
                 print 'no data recieved'
@@ -73,7 +71,7 @@ if __name__ == '__main__':
         (client_sock, client_address) = sock.accept()
         print 'got connection', client_address
         #print client_sock
-        t1 = threading.Thread(target=handle_connection, args=(client_sock,));
-        t1.start()
-        #handle_connection(client_sock)
+        #t1 = threading.Thread(target=handle_connection, args=(client_sock,));
+        #t1.start()
+        handle_connection(client_sock)
 

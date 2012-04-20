@@ -13,11 +13,7 @@ mimeTable = {"jpg" : "image/jpeg",
              "css" : "text/css"}
 
 def initialize():
-    # create a default user
-    #u = meeplib.User('test', 'foo')
-
-    # create a single message
-    #meeplib.Message('my title', 'This is my message!', u, "!")
+    
 
     try:
         fp = open('users.pickle')
@@ -61,6 +57,12 @@ def initialize():
     except IOError:
         p = open('messages.pickle', "w")
         fp.close()
+
+      # create a default user
+    u = meeplib.User('test', 'foo')
+
+    # create a single message
+    meeplib.Message('my title', 'This is my message!', u, "!")
 
 
 

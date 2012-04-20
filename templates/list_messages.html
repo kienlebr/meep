@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}meep: Messages!{% endblock title %}
+{% block title %}
+ meeeeeeep: Messages!!
+{% endblock title %}
 
 {% block body %}
-
+<div id='Header'><h1>Message Board</h1></div>
+<div id='Content'>
 {% if messages %}
 {% for message in messages %}
 	{% if message.pID == '!' %}
@@ -24,7 +27,7 @@
 <form action = '../main_page'>
                  <input type = 'submit' value = 'Index'>
                  </form>
-
+</div>
 {% endblock body %}
 
 {% macro print_message(message) %}

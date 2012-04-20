@@ -3,6 +3,8 @@
 {% block title %}meep: add message!{% endblock title %}
 
 {% block body %}
+<div id='Header'><h1>Add a Message to the Board</h1></div>
+<div id='Content'>
 {% if pID == "!" %}
 	<form action='add_action' method='POST'>
 	Title: <input type='text' name='title'><br>
@@ -18,5 +20,6 @@
 	<input type= 'hidden' name = 'pID' value = '{{ pID }}'>
 	<input type='submit'></form>
 {% endif %}
+</div>
 
 {% endblock body %}

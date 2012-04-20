@@ -48,7 +48,13 @@ def format_return(data):
     if hold != '':
         value += ('HTTP/1.0' + ' ')
         environ['REQUEST_METHOD'] = hold[0]
-        environ['PATH_INFO'] = hold[1]
+        #environ['QUERY_STRING'] = ''
+        if "?" in hold[1]:
+            x,y = hold[1].split("?")
+            environ['PATH_INFO'] = x
+            environ['QUERY_STRING'] = y
+        else:
+            environ['PATH_INFO'] = hold[1]
         environ['SERVER_PROTOCOL'] = hold[2]
     for x in list:
         pair = str(x).split(": ")
@@ -81,10 +87,12 @@ def format_return(data):
 
     def fake_start_response(status, headers):
         thing.append(status)
-        thing.append(headers[0])
+        thing.extend(headers)
+    print "xxxxxxxxxxxxx"
     html = app(environ, fake_start_response)
-
+    print "zzzzzzzzzzzzzzzzz"
     value += thing[0] + '\r\n'
+
 
     date = time.localtime()
     value += ("Date: ")
@@ -103,7 +111,11 @@ def format_return(data):
     value += (str(date[5]))
     value += (" GMT\r\n")
     value += 'Server: WSGIServer/0.1 Python/2.5\r\n'
-    value += str(thing[1][0]) + ': ' + str(thing[1][1]) + '\r\n'
+    #value += str(thing[1][0]) + ': ' + str(thing[1][1]) + '\r\n'
+    for k,v in thing[1:]:
+        value += k + ": " + v + "\r\n"
+        print "K: " + k
+        print "V: " + v
     value += 'Content Length: '
     realhtml = ''
     for x in html:
@@ -117,4 +129,14 @@ def format_return(data):
     fp = open(filename, 'wb')
     fp.write(data)
     fp.close()
+
+    filename = 'WebpageResponse.txt'
+    fp = open(filename, 'wb')
+    fp.write(value)
+    fp.close()
+
+    print data[:50]
+    print value[:50]
+
+
     return value

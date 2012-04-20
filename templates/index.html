@@ -1,6 +1,9 @@
 {% extends "base.html" %}
+
 {% block title %}meep: Login!{% endblock title %}
 {% block body %}
+<div id='Header'><h1>Main Page</h1></div>
+<div id='Content'>
 you are logged in as user: {{username}}.
 <p>
 <form action = '/m/add' method = 'POST'>
@@ -16,7 +19,8 @@ you are logged in as user: {{username}}.
 <input type = 'submit' value = 'Logout'>
 </form>
 <p>
-<form action = '/m/list'>
+<form action = '/m/list' method='POST'>
 <input type = 'submit' value = 'Show Messages'>
 </form>
+</div>
 {% endblock body %}

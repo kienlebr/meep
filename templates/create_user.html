@@ -3,10 +3,11 @@
 {% block title %}meep: Messages!{% endblock title %}
 
 {% block body %}
-
+<div id='Header'><h1>Create A User!</h1></div>
+<div id='Content'>
 <form action='add_new_user' method='POST'>
 Username: <input type='text' name='username'><br/>
 Password:<input type='password' name='password'><br/>
 <input type='submit' value='Create User'></form>
-
+</div>
 {% endblock body %}
