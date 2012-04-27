@@ -14,45 +14,9 @@ mimeTable = {"jpg" : "image/jpeg",
              "css" : "text/css"}
 
 def initialize():
-    
 
-    #try:
-    #    fp = open('users.pickle')
-    #    try:
-    #        obj = pickle.load(fp)
-    #        while True:
-    #            #print obj
-    #            (a, b) = obj
-    #            
-    #            u = meeplib.User(a, b);
-    #            try:
-    #                obj = pickle.load(fp)
-    #            except EOFError:
-    #                break
-    #    except EOFError:
-    #        pass
-    #except IOError:
-    #    fp = open('users.pickle', "w")
-    #    fp.close()
-    #
-    #
-    #try:
-    #    fp = open('messages.pickle')
-    #    try:
-    #        obj = pickle.load(fp)
-    #        while True:
-    #            (a, b, c, d, e) = obj
-    #            m = meeplib.Message(a,b,meeplib.get_user(c), d)
-    #            m.id = e
-    #            try:
-    #                obj = pickle.load(fp)
-    #            except EOFError:
-    #                break
-    #    except EOFError:
-    #        pass
-    #except IOError:
-    #    p = open('messages.pickle', "w")
-    #    fp.close()
+    if(len(get_all_users()) == 0):
+            u = User('test', 'foo')
 
     #Create Tables!
     conn = sqlite3.connect('meep.db')
@@ -69,11 +33,6 @@ def initialize():
     conn.commit()
 
     print 'STARTING UP!'
-    #  # create a default user
-    #u = meeplib.User('test', 'foo')
-
-    ## create a single message
-    #meeplib.Message('my title', 'This is my message!', u, "!")
 
 
 
